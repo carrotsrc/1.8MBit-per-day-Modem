@@ -3,21 +3,17 @@
 #define SYNC_HPP
 
 #define BIT_WIDTH 1
-//#define F0A 240
-//#define F0B 120
-//
-//#define FC0  480
-//
-//#define F1A 720
-//#define F1B 940
 
-#define FC0  473
 
-#define F0A 536
-#define F0B 599
+// Keys in G minor natural scale (440Hz tuning)
 
-#define F1A 662
-#define F1B 725
+#define FC0 698.456   // F
+
+#define F0A 391.995   // G
+#define F0B 440.000   // A
+
+#define F1A 523.251   // C
+#define F1B 622.254   // D#
 
 #endif /* SYNC_HPP */
 

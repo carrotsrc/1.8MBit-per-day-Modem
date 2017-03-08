@@ -168,7 +168,7 @@ void resolve_state(magnitudes& mag, payload& pl) {
       }
       
       std::cout << "\n\n" << pl.bit_num/8 << " bytes\n";
-      std::cout << "\n" << decode_bin(pl.data_buffer, pl.bit_num) << "\n";
+      std::cout << "\n" << decode_bin(pl.data_buffer, pl.bit_num) << "\n-----\n\n";
 #ifdef SHOW_MAG
       std::cout << "\n\n\n\n\n" << std::endl;
 #endif
