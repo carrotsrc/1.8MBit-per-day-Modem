@@ -14,6 +14,7 @@
 #define FS 44100.0f
 
 
+
 enum FREQ {
   CONTROL = 0,
   ZEROA = 1,
@@ -105,12 +106,14 @@ void handle_zero(magnitudes& mag, payload& pl) {
     if(pl.ctl_marker != 0) {
       pl.data_buffer[pl.bit_num] = 0;
       pl.bit_num++;
+      std::cout << "0" << std::flush;
     }
     pl.ctl_marker = 0;
   } else if(mag.f0b > THRESHOLD) {
     if(pl.ctl_marker != '0') {
      pl.data_buffer[pl.bit_num] = 0;
      pl.bit_num++;
+     std::cout << "0" << std::flush;
     }
     pl.ctl_marker = '0';
   } 
@@ -121,12 +124,14 @@ void handle_one(magnitudes& mag, payload& pl) {
     if(pl.ctl_marker != 1) {
       pl.data_buffer[pl.bit_num] = 1;
       pl.bit_num++;
+      std::cout << "1" << std::flush;
     }
     pl.ctl_marker = 1;
   } else if(mag.f1b > THRESHOLD) {
     if(pl.ctl_marker != '1') {
       pl.data_buffer[pl.bit_num] = 1;
       pl.bit_num++;
+      std::cout << "1" << std::flush;
     }
     pl.ctl_marker = '1';
   }
@@ -162,9 +167,12 @@ void resolve_state(magnitudes& mag, payload& pl) {
         s << std::to_string(pl.data_buffer[b]);
       }
       
-      std::cout << "read " << pl.bit_num << " bits\n";
-      std::cout << "\n" << s.str() << "\n";
-      std::cout << "\n\n" << decode_bin(pl.data_buffer, pl.bit_num) << "\n\n\n\n\n\n" << std::endl;
+      std::cout << "\n\n" << pl.bit_num/8 << " bytes\n";
+      std::cout << "\n" << decode_bin(pl.data_buffer, pl.bit_num) << "\n";
+#ifdef SHOW_MAG
+      std::cout << "\n\n\n\n\n" << std::endl;
+#endif
+      
     }
     pl.bit_num = 0;
   } 
@@ -224,8 +232,11 @@ int process(jack_nframes_t nframes, void* data) {
   mag.fc  = fc < 0.0 ? fc * -1.0 : fc;
   
   resolve_state(mag, *pl);
+#ifdef SHOW_MAG
+      print_magnitudes(mag); 
+#endif
 
-  print_magnitudes(mag); 
+  
 
   return 0;
 }
@@ -256,7 +267,10 @@ int main(int argc, char** argv) {
     std::cout << "f0b: " << F0B << "Hz\t" << "(" << pl.fftw.bins[FREQ::ZEROB] << ")\n";
     std::cout << "f1a: " << F1A << "Hz\t" << "(" << pl.fftw.bins[FREQ::ONEA] << ")\n";
     std::cout << "f1b: " << F1B << "Hz\t" << "(" << pl.fftw.bins[FREQ::ONEB] << ")\n";
-    std::cout << "Waiting for signal...\n\n\n\n\n" << std::endl;    
+    std::cout << "Waiting for signal...\n" << std::endl;    
+#ifdef SHOW_MAG
+      std::cout << "\n\n\n\n\n" << std::endl;
+#endif
 
 
     pl.output_buffer = nullptr;
